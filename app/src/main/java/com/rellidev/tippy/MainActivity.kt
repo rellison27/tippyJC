@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,9 +48,11 @@ class MainActivity : ComponentActivity()
 fun Tippy()
 {
     var amountInput by remember { mutableStateOf("") }
+    var tipInput by remember { mutableStateOf("") }
 
     val amount = amountInput.toDoubleOrNull() ?: 0.0
-    val tip = calculateTip(amount)
+    val tipPercentage = tipInput.toDoubleOrNull() ?: 0.0
+    val tip = calculateTip(amount, tipPercentage)
 
     Column(
         modifier = Modifier
@@ -69,6 +72,23 @@ fun Tippy()
         EditNumberField(
             value = amountInput,
             onValueChange = { amountInput = it },
+            label = stringResource(R.string.bill_amount),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction =  ImeAction.Next
+            ),
+            modifier = Modifier
+                .padding(bottom = 32.dp)
+                .fillMaxWidth()
+        )
+        EditNumberField(
+            value = tipInput,
+            onValueChange = { tipInput = it },
+            label = stringResource(R.string.tip_percentage),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
             modifier = Modifier
                 .padding(bottom = 32.dp)
                 .fillMaxWidth()
@@ -81,15 +101,21 @@ fun Tippy()
 }}
 
 @Composable
-fun EditNumberField(value: String, onValueChange: (String) -> Unit,  modifier: Modifier = Modifier)
+fun EditNumberField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    keyboardOptions: KeyboardOptions,
+    modifier: Modifier = Modifier
+)
 {
     TextField(
         value = value,
         onValueChange = onValueChange,
         modifier= modifier,
-        label = { Text(stringResource(R.string.bill_amount)) },
+        label = { Text(label) },
         singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        keyboardOptions = keyboardOptions
     )
 }
 
