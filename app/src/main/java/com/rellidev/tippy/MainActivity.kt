@@ -95,8 +95,8 @@ fun Tippy()
         Slider(
             value = tipAmount,
             onValueChange = { tipAmount = it },
-            steps = 3,
-            valueRange = 5F .. 25F
+            steps = 4,
+            valueRange = 0F .. 25F
         )
         RoundTipRow(
             isRoundingUp = isRoundingUp,
