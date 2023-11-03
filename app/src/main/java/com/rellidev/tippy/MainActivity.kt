@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -57,11 +58,11 @@ class MainActivity : ComponentActivity()
 fun Tippy()
 {
     var amountInput by remember { mutableStateOf("") }
-    var tipInput by remember { mutableStateOf("") }
+    var tipAmount by remember { mutableStateOf(0F) }
     var isRoundingUp by remember { mutableStateOf(false) }
 
     val amount = amountInput.toDoubleOrNull() ?: 0.0
-    val tipPercentage = tipInput.toDoubleOrNull() ?: 0.0
+    val tipPercentage = tipAmount.toDouble()
     val tip = calculateTip(amount, tipPercentage, isRoundingUp)
 
     Column(
@@ -85,23 +86,17 @@ fun Tippy()
             label = stringResource(R.string.bill_amount),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
-                imeAction =  ImeAction.Next
+                imeAction =  ImeAction.Done
             ),
             modifier = Modifier
                 .padding(bottom = 32.dp)
                 .fillMaxWidth()
         )
-        EditNumberField(
-            value = tipInput,
-            onValueChange = { tipInput = it },
-            label = stringResource(R.string.tip_percentage),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
-            ),
-            modifier = Modifier
-                .padding(bottom = 32.dp)
-                .fillMaxWidth()
+        Slider(
+            value = tipAmount,
+            onValueChange = { tipAmount = it },
+            steps = 3,
+            valueRange = 5F .. 25F
         )
         RoundTipRow(
             isRoundingUp = isRoundingUp,
